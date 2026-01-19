@@ -1,0 +1,21 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define _POSIX_C_SOURCE 2008090L
+
+int main(void) {
+
+  char *buff = NULL;
+  char size = 0;
+  ssize_t num_char = getline(&buff, &size, stdin);
+
+  printf("Please enter some text: ");
+  
+# essentially it will be while loop that keeps looping, where it will ask the user to print some
+# text, to which it will confirm if it broke the system or not. if not, then it'll declare it as a
+# token using the strtok_r function that will recognize the buffer, and then print out the
+#   character, before going onto the next text until there's none left to read and it passes by some
+#   parameter that breaks the loop (ex. the user clicks enter or has unexpected seperator) 
+#    free the buff at the end. 
+  free(buff);
+}

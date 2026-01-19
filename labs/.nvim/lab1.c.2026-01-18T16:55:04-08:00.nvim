@@ -1,0 +1,8 @@
+#include <stdio.h>
+
+int main(void) {
+  
+  
+  cout << "Please enter some text: " << endl;
+  getline(cin, x);
+}
