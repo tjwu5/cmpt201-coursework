@@ -1,0 +1,25 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main(void) {
+    char *line = NULL;
+    size_t len = 0;
+    size_t read;
+
+    while (1) {
+        printf("Enter input: ");
+        fflush(stdout);
+
+        read = getline(&line, &len, stdin);
+        if (read == -1) {
+            break;
+        }
+
+        printf("%s", line);
+    }
+
+    free(line);
+    return 0;
+}
+

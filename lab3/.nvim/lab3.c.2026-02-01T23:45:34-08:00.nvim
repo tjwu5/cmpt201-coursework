@@ -1,0 +1,91 @@
+// lab3.c
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define HISTORY_SIZE 5
+
+void add_to_history(char *history[], int *count, int *next_index, char *line) {
+    if (history[*next_index] != NULL) {
+        free(history[*next_index]);
+        history[*next_index] = NULL;
+    }
+
+    history[*next_index] = line;  
+
+    *next_index = (*next_index + 1) % HISTORY_SIZE;
+
+    if (*count < HISTORY_SIZE) {
+        (*count)++;
+    }
+}
+
+void print_history(char *history[], int count, int next_index) {
+    int start = (next_index + (HISTORY_SIZE - count)) % HISTORY_SIZE;
+
+    for (int i = 0; i < count; i++) {
+        int idx = (start + i) % HISTORY_SIZE;
+        if (history[idx] != NULL) {
+            printf("%s\n", history[idx]);
+        }
+    }
+}
+
+void free_history(char *history[]) {
+    for (int i = 0; i < HISTORY_SIZE; i++) {
+        if (history[i] != NULL) {
+            free(history[i]);
+            history[i] = NULL;
+        }
+    }
+}
+
+int main(void) {
+    char *history[HISTORY_SIZE] = {NULL};
+    int count = 0;       
+    int next_index = 0;  
+
+    char *line = NULL;
+    size_t bufsize = 0;
+    ssize_t linelen;
+
+    while (1) {
+        printf("Enter input: ");
+        fflush(stdout);
+
+        linelen = getline(&line, &bufsize, stdin);
+        if (linelen == -1) {
+            break;
+        }
+
+        if (linelen > 0 && line[linelen - 1] == '\n') {
+            line[linelen - 1] = '\0';
+            linelen--;
+        }
+
+        char *stored = malloc(linelen + 1);
+        if (stored == NULL) {
+            fprintf(stderr, "Memory allocation failed\n");
+            free(line);
+            free_history(history);
+            return 1;
+        }
+        strcpy(stored, line);
+
+        if (strcmp(stored, "print") == 0) {
+            add_to_history(history, &count, &next_index, stored);
+
+            print_history(history, count, next_index);
+        } else {
+            add_to_history(history, &count, &next_index, stored);
+        }
+
+    }
+
+    free(line);
+    free_history(history);
+
+    return 0;
+}
+
